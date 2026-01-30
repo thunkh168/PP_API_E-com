@@ -47,4 +47,4 @@ def login():
 @jwt_required()
 def logout():
     # JWT stateless example: frontend just delete token
-    return jsonify({"message": "Logged out (delete token on client)"}), 200
+    return jsonify({"message": "Logged out Success"}), 200

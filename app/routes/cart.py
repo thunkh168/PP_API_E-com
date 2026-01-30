@@ -41,6 +41,25 @@ def add_to_cart():
     db.session.commit()
     return jsonify({"message": "Added to cart"}), 200
 
+@bp.put("/update/<int:item_id>")
+@jwt_required()
+def update_cart(item_id):
+    user_id = int(get_jwt_identity())
+    data = request.get_json() or {}
+
+    qty = int(data.get("qty", 0))
+    if qty <= 0:
+        return jsonify({"message": "qty must be greater than 0"}), 400
+
+    item = CartItem.query.filter_by(id=item_id, user_id=user_id).first()
+    if not item:
+        return jsonify({"message": "Cart item not found"}), 404
+
+    item.qty = qty
+    db.session.commit()
+
+    return jsonify({"message": "Cart updated"}), 200
+
 @bp.delete("/remove/<int:item_id>")
 @jwt_required()
 def remove_item(item_id):
